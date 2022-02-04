@@ -1,4 +1,4 @@
-module twoinputorgate(
+module twoinputorgate( // Using 4to1 mux
     input in0,
     input in1,
     output o
