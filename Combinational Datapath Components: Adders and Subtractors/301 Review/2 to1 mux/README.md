@@ -1,1 +1,1 @@
-creating 2 to 1 mux using verilog
+Creating 2 to 1 mux using verilog
