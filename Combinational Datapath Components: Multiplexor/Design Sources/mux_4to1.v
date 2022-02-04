@@ -1,4 +1,4 @@
-module mux_4to1(
+module mux_4to1( // Using 3 2to1 mux
     input a,
     input b,
     input c,
