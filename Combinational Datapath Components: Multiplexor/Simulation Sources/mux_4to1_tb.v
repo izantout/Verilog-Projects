@@ -1,4 +1,4 @@
-module mux_4to1_tb(
+module mux_4to1_tb(  // Using 3 2to1 mux
     );
     
     reg a_tb;
