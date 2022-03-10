@@ -1,7 +1,7 @@
 module SD(
   input i,
   input clk,
-  output reg 0
+  output reg o
   );
   
   // State decleration
