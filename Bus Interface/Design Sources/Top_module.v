@@ -30,12 +30,12 @@ module Top_Module(
     // Connect Bus_Masters, Arbiter, and BCD_to_7seg together based on the diagram.
 
     Bus_Master 
-    bm1(.ack1(Ack1), .data_in(data_in1), .req_in(req_in1), .reset(reset), .clk(clk)), 
-    bm2(.ack2(Ack2), .data_in(data_in2), .req_in(req_in2), .reset(reset), .clk(clk)), 
-    bm3(.ack3(Ack3), .data_in(data_in3), .req_in(req_in3), .reset(reset), .clk(clk));
+    bm1(.ack(ack1), .data_in(data_in1), .req_in(req_in1), .data_out(data_out), .req_out(req1), .reset(reset), .clk(clk)), 
+    bm2(.ack(ack2), .data_in(data_in2), .req_in(req_in2), .data_out(data_out), .req_out(req2), .reset(reset), .clk(clk)), 
+    bm3(.ack(ack3), .data_in(data_in3), .req_in(req_in3), .data_out(data_out), .req_out(req3), .reset(reset), .clk(clk));
         
-    Arbiter a0(.req_in1(req1), .req_in2(req2), .req_in3(req3_out), .clk(clk), .reset(reset));    
-   
+    Arbiter a0(.Req1(req1), .Req2(req2), .Req3(req3), .Ack1(ack1), .Ack2(ack2), .Ack3(ack3), .clk(clk), .reset(reset));    
+         
     BCD_To_7seg bcd(.Q({2'b0,data_out}), .cathode(cathode));
         
 endmodule
