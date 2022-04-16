@@ -40,7 +40,7 @@ module Bus_Master(
             req_out  <= req_in;
         end  
         else begin
-            data_out <= 2'bZZ;
+            data_out <= 2'bz;
             req_out  <= req_in;
         end
     end 
