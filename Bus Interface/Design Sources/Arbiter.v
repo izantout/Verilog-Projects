@@ -75,8 +75,8 @@ module Arbiter(
                     casez({Req1,Req2,Req3})
                         // Write the code for MASTER2 State.
                         3'b000: next_state  = IDLE;
-                        3'b1??: next_state  = MASTER1; // Question mark means don't care. Keep it as is.
-                        3'b01?: next_state  = MASTER2;
+                        3'b10?: next_state  = MASTER1; // Question mark means don't care. Keep it as is.
+                        3'b?1?: next_state  = MASTER2;
                         3'b001: next_state  = MASTER3;
                         default: next_state = MASTER2;
                     endcase    
@@ -85,9 +85,9 @@ module Arbiter(
                     casez({Req1,Req2,Req3})
                         // Write the code for MASTER3 State.
                         3'b000: next_state  = IDLE;
-                        3'b1??: next_state  = MASTER1; // Question mark means don't care. Keep it as is.
-                        3'b01?: next_state  = MASTER2;
-                        3'b001: next_state  = MASTER3;
+                        3'b1?0: next_state  = MASTER1; // Question mark means don't care. Keep it as is.
+                        3'b010: next_state  = MASTER2;
+                        3'b??1: next_state  = MASTER3;
                         default: next_state = MASTER3;
                     endcase             
                   end          
@@ -116,11 +116,11 @@ module Arbiter(
                        end     
                 MASTER1: begin 
                          //Write the code for MASTER1 State output 
-                         {Ack1, Ack2, Ack3} = 3'b100;          
+                         {Ack1, Ack2, Ack3} = 3'b1??;          
                        end     
                	MASTER2: begin 
                          //Write the code for MASTER2 State output
-                         {Ack1, Ack2, Ack3} = 3'b010;         
+                         {Ack1, Ack2, Ack3} = 3'b01?;         
                        end    
                 MASTER3: begin 
                          //Write the code for MASTER3 State output   
