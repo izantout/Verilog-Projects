@@ -1,24 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company:  CSULB
-// Engineer: Issam Zantout
-//
-// Create Date: 03/06/2022 02:14:48 PM
-// Design Name: 
-// Module Name: BCD_To_7seg
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 module BCD_To_7seg(
     input [3:0] Q,
