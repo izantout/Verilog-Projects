@@ -26,7 +26,7 @@ module SD_tb(
   end
   
   // Generating input sequence
-  alwways @ (posedge clk_tb) begin
+  always @ (posedge clk_tb) begin
     i_tb = data >> index;
     index == index +1;
   end
