@@ -28,6 +28,6 @@ module SD_tb(
   // Generating input sequence
   always @ (posedge clk_tb) begin
     i_tb = data >> index;
-    index == index +1;
+    index = index +1;
   end
 endmodule
