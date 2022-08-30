@@ -1,7 +1,8 @@
+`timescale 1ns / 1ps
 module SD_tb(
   );
   // Create registers, wires, and required variables
-  ref i_tb, clk_tb;
+  reg i_tb, clk_tb;
   wire o_tb;
   integer index;
   reg [9:0] data;
@@ -28,6 +29,7 @@ module SD_tb(
   // Generating input sequence
   always @ (posedge clk_tb) begin
     i_tb = data >> index;
-    index = index +1;
+    index = index + 1;
   end
 endmodule
+
