@@ -1,274 +1,368 @@
 `timescale 1ns / 1ps
+module FSM(
+    output reg [2:0] north_lights     , // North Lights 
+    output reg [2:0] north_left_lights, // South Lights
+    output reg [2:0] east_lights      , // East Lights
+    output reg [2:0] east_left_lights , // West Lights
+    output reg [2:0] walk_north       , // walk signal north
+    output reg [2:0] walk_east        , // walk signal east
+    input clk                         , // Clock
+    input reset                       , // Reset
+    input btnu,
+    input btnl,
+    output [7:0] cathode              , // cathode for 7 segment
+    output [7:0] anode                  // anode for 7 segment
 
- module FSM(
-    input clk,
-    input reset,
-    input [3:0] switches,
-    output reg [11:0] out = 12'b000_000_000_000
 );
-
-reg [3:0] state;
-reg [3:0] nstate;
-
-    // GNS YNS RNS GEW YEW REW GLNS YLNS RLNS GLEW YLEW RLEW
-
-localparam AllRED       =  4'b0000, // 12'b001_001_001_001, // When all lights are red
-           GreenNS      =  4'b0001, // 12'b100_001_001_001, // Wen NS is green
-           YellowNS     =  4'b0010, // 12'b010_001_001_001, // When NS is yellow
-           GreenEW      =  4'b0011, // 12'b001_100_001_001, // When EW is green
-           YellowEW     =  4'b0100, // 12'b001_010_001_001, // When EW is yellow
-           GreenLeftNS  =  4'b0101, // 12'b001_001_100_001, // When Left NS is green
-           YellowLeftNS =  4'b0110, // 12'b001_001_010_001, // When Left NS is yellow
-           GreenLeftEW  =  4'b0111, // 12'b001_001_001_100, // When left EW is green
-           YellowLeftEW =  4'b1000; // 12'b001_001_001_010; // When left EW is yellow
-           
-           
- always @ (*)
-               begin
-                 case(state)
-                   AllRED:       out = 12'b001_001_001_001; // When all lights are red
-                   GreenNS:      out = 12'b100_001_001_001; // When NS is green
-                   YellowNS:     out = 12'b010_001_001_001; // When NS is yellow
-                   GreenEW:      out = 12'b001_100_001_001; // When EW is green
-                   YellowEW:     out = 12'b001_010_001_001; // When EW is yellow
-                   GreenLeftNS:  out = 12'b001_001_100_001; // When Left NS is green
-                   YellowLeftNS: out = 12'b001_001_010_001; // When Left NS is yellow
-                   GreenLeftEW:  out = 12'b001_001_001_100; // When left EW is green
-                   YellowLeftEW: out = 12'b001_001_001_010; // When left EW is yellow
-                   default out = 12'b000_000_000_000;
-                   endcase
-               end        
-always @ (posedge clk, posedge reset)
-    begin
-        if(reset)
-           begin
-               state <= AllRED;
-               out <= 12'b001_001_001_001;
-           end
-        else
-            state <= nstate;
-            end
-            
-        always@(*)begin
-        case(state)
-            // AllRED case Done
-            AllRED: 
-                case(switches)
-                // All 16 switch input possibilities
-                    0000: nstate <= AllRED;
-                    0001: nstate <= GreenNS;
-                    0010: nstate <= GreenLeftNS;
-                    0011: nstate <= GreenNS;
-                    
-                    0100: nstate <= GreenEW;
-                    0101: nstate <= GreenNS;
-                    0110: nstate <= GreenEW;
-                    0111: nstate <= GreenNS;
-                    
-                    1000: nstate <= GreenLeftEW;
-                    1001: nstate <= GreenNS;
-                    1010: nstate <= GreenLeftEW;
-                    1011: nstate <= GreenNS;
-                    
-                    1100: nstate <= GreenEW;
-                    1101: nstate <= GreenNS;
-                    1110: nstate <= GreenEW;
-                    1111: nstate <= GreenNS;
-                endcase
-            // Green NS case Done
-            GreenNS:
-                case(switches)
-                    // All 16 switch input possibilities
-                    0000: nstate <= GreenNS;
-                    0001: nstate <= GreenNS;
-                    0010: nstate <= GreenLeftNS;
-                    0011: nstate <= GreenNS;
-                    
-                    0100: nstate <= GreenEW;
-                    0101: nstate <= YellowNS;
-                    0110: nstate <= YellowNS;
-                    0111: nstate <= YellowNS;
-                    
-                    1000: nstate <= YellowNS;
-                    1001: nstate <= YellowNS;
-                    1010: nstate <= YellowNS;
-                    1011: nstate <= YellowNS;
-                    
-                    1100: nstate <= YellowNS;
-                    1101: nstate <= YellowNS;
-                    1110: nstate <= YellowNS;
-                    1111: nstate <= YellowNS;
-                endcase
-            // Yellow NS case Done
-            YellowNS:
-                case(switches)
-                // All 16 switch input possibilities
-                0000: nstate <= AllRED;
-                0001: nstate <= AllRED;
-                0010: nstate <= AllRED;
-                0011: nstate <= AllRED;
-                
-                0100: nstate <= AllRED;
-                0101: nstate <= AllRED;
-                0110: nstate <= AllRED;
-                0111: nstate <= AllRED;
-                
-                1000: nstate <= AllRED;
-                1001: nstate <= AllRED;
-                1010: nstate <= AllRED;
-                1011: nstate <= AllRED;
-                
-                1100: nstate <= AllRED;
-                1101: nstate <= AllRED;
-                1110: nstate <= AllRED;
-                1111: nstate <= AllRED;
-            endcase
-            // Green EW case Done
-            GreenEW:
-                case(switches)
-                // All 16 switch input possibilities
-                0000: nstate <= GreenEW;
-                0001: nstate <= YellowEW;
-                0010: nstate <= YellowEW;
-                0011: nstate <= YellowEW;
-                
-                0100: nstate <= GreenEW;
-                0101: nstate <= YellowEW;
-                0110: nstate <= YellowEW;
-                0111: nstate <= YellowEW;
-                
-                1000: nstate <= YellowEW;
-                1001: nstate <= YellowEW;
-                1010: nstate <= YellowEW;
-                1011: nstate <= YellowEW;
-                
-                1100: nstate <= YellowEW;
-                1101: nstate <= YellowEW;
-                1110: nstate <= YellowEW;
-                1111: nstate <= YellowEW;
-            endcase
-            // Yellow EW case Done
-            YellowEW:
-                case(switches)
-                // All 16 switch input possibilities
-                0000: nstate <= AllRED;
-                0001: nstate <= AllRED;
-                0010: nstate <= AllRED;
-                0011: nstate <= AllRED;
-                
-                0100: nstate <= AllRED;
-                0101: nstate <= AllRED;
-                0110: nstate <= AllRED;
-                0111: nstate <= AllRED;
-                
-                1000: nstate <= AllRED;
-                1001: nstate <= AllRED;
-                1010: nstate <= AllRED;
-                1011: nstate <= AllRED;
-                
-                1100: nstate <= AllRED;
-                1101: nstate <= AllRED;
-                1110: nstate <= AllRED;
-                1111: nstate <= AllRED;
-            endcase
-            // Green Left NS case Done
-            GreenLeftNS:
-                case(switches)
-                // All 16 switch input possibilities
-                0000: nstate <= YellowLeftNS;
-                0001: nstate <= YellowLeftNS;
-                0010: nstate <= GreenLeftNS;
-                0011: nstate <= YellowLeftNS;
-                
-                0100: nstate <= YellowLeftNS;
-                0101: nstate <= YellowLeftNS;
-                0110: nstate <= YellowLeftNS;
-                0111: nstate <= YellowLeftNS;
-                
-                1000: nstate <= YellowLeftNS;
-                1001: nstate <= YellowLeftNS;
-                1010: nstate <= YellowLeftNS;
-                1011: nstate <= YellowLeftNS;
-                
-                1100: nstate <= YellowLeftNS;
-                1101: nstate <= YellowLeftNS;
-                1110: nstate <= YellowLeftNS;
-                1111: nstate <= YellowLeftNS;
-            endcase
-            // Yellow Left NS case Done
-            YellowLeftNS:
-                case(switches)
-                // All 16 switch input possibilities
-                0000: nstate <= AllRED;
-                0001: nstate <= AllRED;
-                0010: nstate <= AllRED;
-                0011: nstate <= AllRED;
-                
-                0100: nstate <= AllRED;
-                0101: nstate <= AllRED;
-                0110: nstate <= AllRED;
-                0111: nstate <= AllRED;
-                
-                1000: nstate <= AllRED;
-                1001: nstate <= AllRED;
-                1010: nstate <= AllRED;
-                1011: nstate <= AllRED;
-                
-                1100: nstate <= AllRED;
-                1101: nstate <= AllRED;
-                1110: nstate <= AllRED;
-                1111: nstate <= AllRED;
-            endcase
-            // Green Left EW case Done
-            GreenLeftEW:
-                case(switches)
-                // All 16 switch input possibilities
-                0000: nstate <= YellowLeftEW;
-                0001: nstate <= YellowLeftEW;
-                0010: nstate <= YellowLeftEW;
-                0011: nstate <= YellowLeftEW;
-                
-                0100: nstate <= YellowLeftEW;
-                0101: nstate <= YellowLeftEW;
-                0110: nstate <= YellowLeftEW;
-                0111: nstate <= YellowLeftEW;
-                
-                1000: nstate <= GreenLeftEW;
-                1001: nstate <= YellowLeftEW;
-                1010: nstate <= YellowLeftEW;
-                1011: nstate <= YellowLeftEW;
-                
-                1100: nstate <= YellowLeftEW;
-                1101: nstate <= YellowLeftEW;
-                1110: nstate <= YellowLeftEW;
-                1111: nstate <= YellowLeftEW;
-            endcase
-            // Yellow Left EW case Done
-            YellowLeftEW:
-                case(switches)
-                // All 16 switch input possibilities
-                0000: nstate <= AllRED;
-                0001: nstate <= AllRED;
-                0010: nstate <= AllRED;
-                0011: nstate <= AllRED;
-                
-                0100: nstate <= AllRED;
-                0101: nstate <= AllRED;
-                0110: nstate <= AllRED;
-                0111: nstate <= AllRED;
-                
-                1000: nstate <= AllRED;
-                1001: nstate <= AllRED;
-                1010: nstate <= AllRED;
-                1011: nstate <= AllRED;
-                
-                1100: nstate <= AllRED;
-                1101: nstate <= AllRED;
-                1110: nstate <= AllRED;
-                1111: nstate <= AllRED;
-            endcase
-        endcase
-    end
-    
+   reg [2:0] state;                     // FSM State
+   reg [27:0] delay;                    // Delay variable for time tracking
+   reg [2:0] Q;                         // Q for output
+   assign anode = 8'b1111_1110;         // assigning anode to show furthest right
    
+   BCD_To_7seg BCD(.Q(Q), .cathode(cathode));
+   
+   localparam [2:0] north           = 3'b000, // State for Green North 
+                    northYellow     = 3'b001, // State for Yellow North
+                    northLeft       = 3'b010, // State for Green South
+                    northLeftYellow = 3'b011, // State for Yellow South
+                    east            = 3'b100, // State for Green East
+                    eastYellow      = 3'b101, // State for Yellow East
+                    eastLeft        = 3'b110, // State for Green West
+                    eastLeftYellow  = 3'b111; // State for Yellow West
+
+   
+ 
+
+   always @(posedge clk, posedge reset)
+     begin
+        if (reset) // If reset is 1
+            begin
+                state = north; // Go to reset state which is go north
+                delay = 28'b0; // Delay is 0
+            end
+        else
+            begin
+                if(btnu == 0 && btnl == 0) begin
+                    case (state)
+                    north :
+                        begin
+                            if (delay == 28'b1111_1111_1111_1111_1111_1111_1111) // If the delay is done
+                                begin
+                                    delay = 28'b0; // reset the delay
+                                    state = northYellow; // go to next state 
+                                end // if
+                            else // else
+                                begin
+                                    delay = delay + 28'b1; // Increase the delay by one
+                                    state = north; // keep state to be north
+                                end // else
+                        end // north begin
+    
+                    northYellow :
+                        begin
+                            if (delay == 28'b0111_1111_1111_1111_1111_1111_1111)
+                                begin
+                                    delay = 28'b0;
+                                    state = northLeft;
+                                end // if
+                            else
+                                begin
+                                    delay = delay + 28'b1;
+                                    state = northYellow;
+                                end // else
+                        end // northYellow begin
+    
+                   northLeft :
+                        begin
+                            if (delay == 28'b1111_1111_1111_1111_1111_1111_1111)
+                                begin
+                                    delay = 28'b0;
+                                    state = northLeftYellow;
+                                end
+                            else
+                                begin
+                                    delay = delay + 28'b1;
+                                    state = northLeft;
+                                end
+                        end // south begin
+    
+                northLeftYellow :
+                    begin
+                        if (delay == 28'b0111_1111_1111_1111_1111_1111_1111)
+                            begin
+                                delay = 28'b0;
+                                state = east;
+                            end // if begin
+                        else
+                            begin
+                                delay = delay + 28'b1;
+                                state = northLeftYellow;
+                            end // else begin
+                        end // south yellow begin
+    
+                east :
+                    begin
+                        if (delay == 28'b1111_1111_1111_1111_1111_1111_1111)
+                            begin
+                                delay = 28'b0;
+                                state = eastYellow;
+                            end // if 
+                        else
+                            begin
+                                delay = delay + 28'b1;
+                                state = east;
+                            end // else
+                    end // east begin
+    
+                eastYellow :
+                    begin
+                        if (delay == 28'b0111_1111_1111_1111_1111_1111_1111)
+                            begin
+                                delay = 28'b0;
+                                state = eastLeft;
+                            end // if
+                        else
+                            begin
+                                delay = delay + 28'b1;
+                                state = eastYellow;
+                            end // else
+                    end // east yellow begin
+    
+                eastLeft :
+                    begin
+                        if (delay == 28'b1111_1111_1111_1111_1111_1111_1111)
+                            begin
+                                state = eastLeftYellow;
+                                delay = 28'b0;
+                            end // if
+                        else
+                            begin
+                                delay = delay + 28'b1;
+                                state = eastLeft;
+                            end // else
+                    end // west begin
+    
+                eastLeftYellow :
+                    begin
+                        if (delay == 28'b0111_1111_1111_1111_1111_1111_1111)
+                            begin
+                                state = north;
+                                delay = 28'b0;
+                            end // if
+                        else
+                            begin
+                                delay = delay + 28'b1;
+                                state = eastLeftYellow;
+                            end // else
+                    end // west yellow begin
+                endcase // case state
+                end // if
+                else if (btnu == 0 && btnl == 1) begin
+                    case(state)
+                        north: 
+                        begin
+                            state = east;
+                        end
+                        northYellow:
+                        begin
+                            state = east;
+                        end
+                        northLeft:
+                        begin
+                            state = east;
+                        end
+                        northLeftYellow:
+                        begin
+                            state = east;
+                        end
+                        east:
+                        begin
+                            state = east;
+                        end
+                        eastYellow:
+                        begin
+                            state = east;
+                        end
+                        eastLeft:
+                        begin
+                            state = east;
+                        end
+                        eastLeftYellow:
+                        begin
+                            state = east;
+                        end
+                    endcase
+                end // else if
+                else if(btnu == 1 && btnl == 0)
+                begin
+                    case(state)
+                        north: 
+                        begin
+                            state = north;
+                        end
+                        northYellow:
+                        begin
+                            state = north;
+                        end
+                        northLeft:
+                        begin
+                            state = north;
+                        end
+                        northLeftYellow:
+                        begin
+                            state = north;
+                        end
+                        east:
+                        begin
+                            state = north;
+                        end
+                        eastYellow:
+                        begin
+                            state = north;
+                        end
+                        eastLeft:
+                        begin
+                            state = north;
+                        end
+                        eastLeftYellow:
+                        begin
+                            state = north;
+                        end
+                    endcase
+                end // else if
+                else 
+                begin
+                    case(state)
+                        north: 
+                        begin
+                            state = east;
+                        end
+                        northYellow:
+                        begin
+                            state = east;
+                        end
+                        northLeft:
+                        begin
+                            state = east;
+                        end
+                        northLeftYellow:
+                        begin
+                            state = east;
+                        end
+                        east:
+                        begin
+                            state = north;
+                        end
+                        eastYellow:
+                        begin
+                            state = north;
+                        end
+                        eastLeft:
+                        begin
+                            state = north;
+                        end
+                        eastLeftYellow:
+                        begin
+                            state = north;
+                        end
+                    endcase
+                end // else
+            end // big else
+     end // always @ state
+
+
+    always @(state)
+         begin
+             case (state)
+                north :
+                    begin
+                        north_lights = 3'b001;
+                        north_left_lights = 3'b001;
+                        east_lights  = 3'b100;
+                        east_left_lights  = 3'b100;
+                        walk_north = (btnu==1) ? 3'b100 : 3'b010;
+                        walk_east = 3'b100;
+                        Q = 3'b000;
+                    end // north
+    
+                northYellow :
+                    begin
+                        north_lights = 3'b010;
+                        north_left_lights = 3'b010;
+                        east_lights  = 3'b100;
+                        east_left_lights  = 3'b100;
+                        walk_north = (btnu==1) ? 3'b100 : 3'b110;
+                        walk_east = 3'b100;
+                        Q = 3'b001;
+                    end // north yellow
+    
+                northLeft :
+                    begin
+                        north_lights = 3'b001;
+                        north_left_lights = 3'b001;
+                        east_lights  = 3'b100;
+                        east_left_lights  = 3'b100;
+                        walk_north = 3'b100;
+                        walk_east = 3'b100;
+                        Q = 3'b010;
+                    end // south
+    
+                northLeftYellow :
+                    begin
+                        north_lights = 3'b010;
+                        north_left_lights = 3'b010;
+                        east_lights  = 3'b100;
+                        east_left_lights  = 3'b100;
+                        walk_north = 3'b100;
+                        walk_east = 3'b100;
+                        Q = 3'b011;
+                    end // south yellow
+                east :
+                    begin
+                        north_lights = 3'b100;
+                        north_left_lights = 3'b100;
+                        east_lights  = 3'b001;
+                        east_left_lights  = 3'b001;
+                        walk_north = 3'b100;
+                        walk_east = (btnl==1) ? 3'b100 : 3'b010;
+                        Q = 3'b100;
+                    end // east
+                eastYellow :
+                    begin
+                        north_lights = 3'b100;
+                        north_left_lights = 3'b100;
+                        east_lights  = 3'b010;
+                        east_left_lights  = 3'b010;
+                        walk_north = 3'b100;
+                        walk_east = (btnl==1) ? 3'b100 : 3'b110;
+                        Q = 3'b101;
+                    end // east yellow
+                eastLeft :
+                    begin
+                        north_lights = 3'b100;
+                        north_left_lights = 3'b100;
+                        east_lights  = 3'b001;
+                        east_left_lights  = 3'b100;
+                        walk_north = 3'b100;
+                        walk_east = 3'b100;      
+                        Q = 3'b110;              
+                    end // west
+    
+                eastLeftYellow :
+                    begin
+                        north_lights = 3'b100;
+                        north_left_lights = 3'b100;
+                        east_lights  = 3'b010;
+                        east_left_lights  = 3'b010;
+                        walk_north = 3'b100;
+                        walk_east = 3'b100; 
+                        Q = 3'b111;                   
+                    end // west yellow
+    
+                
+    
+                
+            endcase // case (state)
+            
+     end //     always @ (state)
 endmodule
